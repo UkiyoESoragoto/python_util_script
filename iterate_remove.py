@@ -1,15 +1,21 @@
 #! /usr/bin/env python
 # coding=utf-8
 import os
-import md5
+import hashlib
 import time
 
 def getmd5( filename ):
-  file = open( filename, 'rb' )
-  file_content = file.read(1024*1024)
-  file.close()
-  m = md5.new( file_content )
-  return m.hexdigest()
+    if not os.path.isfile(filename):
+        return
+    myhash = hashlib.md5()
+    file = open( filename, 'rb' )
+    while True:
+        b = file.read(1024 * 1024)
+        if not b:
+            break
+        myhash.update(b)
+    file.close()
+    return myhash.hexdigest()
 
 def delfile(flist_temp):
   dellist = []
@@ -35,7 +41,7 @@ def main():
   delete all iterate file
   include file in subfolders
   '''
-  print 'Start ...\n'
+  print('Start ...\n')
   start = time.clock()
   path = os.getcwd()
   list_fn = []
@@ -45,17 +51,17 @@ def main():
       list_fn.append( full_path )
 
   list_fn.reverse()
-  print 'file count:\t',len( list_fn ),'\n'
+  print('file count:\t',len( list_fn ),'\n')
   delf = delfile( list_fn )
   for f in delf:
-    print 'delete\t',f
+    print('delete\t',f)
     #os.remove( f )
   end = time.clock()
-  print '\ncount:\t',len( list_fn ),'\n'
-  print 'delete:\t',len( delf ),'\n'
-  print 'time:\t',end-start,'\n'
+  print('\ncount:\t',len( list_fn ),'\n')
+  print('delete:\t',len( delf ),'\n')
+  print('time:\t',end-start,'\n')
   #os.remove('delReFile.py')
-  time.sleep(30)
+  # time.sleep(30)
   return 0
 
 
